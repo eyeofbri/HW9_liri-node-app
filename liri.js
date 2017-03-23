@@ -11,8 +11,7 @@ var temp_twitterKeys = keys.twitterKeys;
 
 // STEP THREE
 // 	Make it so liri.js can take in one of the following commands:
-// 		my-tweets, spotify-this-song, movie-this, do-what-it-says
-
+// 	my-tweets, spotify-this-song, movie-this, do-what-it-says
 var inputString = process.argv;
 var command = inputString[2];
 //take the FUll process argumnet...
@@ -33,13 +32,14 @@ function executeCommands(whatToDo, detail) {
 		    var newCommand = array[0];
 		    var newDetail = array[1].replace(/\"/g, "");
 
-		    console.log(
-		    	"-----------------------"+"\n"
+		    var outputText = "-----------------------"+"\n"
 				+"----TEXT FILE COMMAND START----\n"
 				+newCommand +"\n"+ newDetail+"\n"
 				+"-----TEXT FILE COMMAND END-----\n"
-				+"-----------------------"
-			);
+				+"-----------------------";
+
+		    console.log(outputText);
+			logText(outputText);
 		    executeCommands(newCommand, newDetail)
 		});
 	}
@@ -100,17 +100,33 @@ function executeCommands(whatToDo, detail) {
 executeCommands(command, command_detail);
 
 
+
+
+
+
+
 function logTweets(tweets) {
-	console.log( "-----------------------\n----START OF TWEETS---");
+	var outputText_1 ="-----------------------\n----START OF TWEETS---";
+	console.log(outputText_1);
+	logText(outputText_1);
+
 	for (var i = 0; i < tweets.length; i++) {
 		var id = tweets[i].id;
 		var text = tweets[i].text;
-		console.log( "----------------");
-		console.log( "--tweet:-"+i+"----");
-		console.log( id + "\n"+ text );
-		console.log( "----------------");
+
+		var outputText_2 = 
+			"----------------\n"
+			+"--tweet:-"+i+"----\n"
+			+id + "\n"+ text +"\n"
+			+"----------------"
+		;
+		console.log(outputText_2);
+		logText(outputText_2);
 	}
-	console.log( "----END OF TWEETS---\n-----------------------");
+
+	var outputText_3 ="----END OF TWEETS---\n-----------------------";
+	console.log(outputText_3);
+	logText(outputText_3);
 }
 
 
@@ -132,13 +148,16 @@ function logMusic(trackItems, songName) {
 	var preview = "Preview URL: "+songInfo.preview_url;
 	var album = "Album Title: "+songInfo.album.name;
 
-	console.log(
+	var outputText =
 		"-----------------------"+"\n"
 		+"----START OF SPOTIFY----\n"
 		+artist+"\n"+name+"\n"+preview+"\n"+album+"\n"
 		+"-----END OF SPOTIFY-----\n"
 		+"-----------------------"
-	);
+	;
+
+	console.log(outputText);
+	logText(outputText);
 }
 
 
@@ -194,7 +213,7 @@ function logMovies(body) {
 	mRotten_URL = "Rotten Tomatoes URL: "+mRotten_URL.substring(3,mRotten_URL.length - 3);
 
 
-	console.log(
+	var outputText =
 		"-----------------------"+"\n"
 		+"----START OF OMDB----\n"
 		+mTitle+"\n"
@@ -208,6 +227,19 @@ function logMovies(body) {
 		+mRotten_URL+"\n"
 		+"-----END OF OMDB-----\n"
 		+"-----------------------"
-	);
+	;
+	console.log(outputText);
+	logText(outputText);
+}
+
+
+// BONUS
+// APPEND TEXT TO A FILE
+function logText(txt) {
+	var fs = require('fs')
+	fs.appendFile('log.txt', (txt+"\n"), function (err) {
+		if (err) return console.log(err);
+		// console.log('Appended!');
+	});
 }
 
