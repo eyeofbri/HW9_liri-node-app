@@ -19,14 +19,13 @@ var command = inputString[2];
 //...then join the resulting array into a string
 var command_detail = process.argv.slice(3).join(" ");
 
-
+var fs = require('fs');
 
 
 function executeCommands(whatToDo, detail) {
 
 	if(whatToDo == "do-what-it-says" || whatToDo == "d"){
-		var fs = require('fs');
-		fs.readFile('random.txt', function(err, data) {
+		fs.readFile('random.txt', "utf8", function(err, data) {
 		    if(err) throw err;
 		    var array = data.toString().split(",");
 		    var newCommand = array[0];
@@ -39,7 +38,7 @@ function executeCommands(whatToDo, detail) {
 				+"-----------------------";
 
 		    console.log(outputText);
-			logText(outputText);
+			fs.appendFile('log.txt', (outputText+"\n") );
 		    executeCommands(newCommand, newDetail)
 		});
 	}
@@ -89,6 +88,9 @@ function executeCommands(whatToDo, detail) {
 		  // console.log('error:', error); // Print the error if one occurred 
 		  // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
 		  // console.log('body:', body); // Print the HTML for the Google homepage.
+
+
+
 		  logMovies(body);
 		});
 
@@ -108,7 +110,7 @@ executeCommands(command, command_detail);
 function logTweets(tweets) {
 	var outputText_1 ="-----------------------\n----START OF TWEETS---";
 	console.log(outputText_1);
-	logText(outputText_1);
+	fs.appendFile('log.txt', (outputText_1+"\n") );
 
 	for (var i = 0; i < tweets.length; i++) {
 		var id = tweets[i].id;
@@ -121,12 +123,12 @@ function logTweets(tweets) {
 			+"----------------"
 		;
 		console.log(outputText_2);
-		logText(outputText_2);
+		fs.appendFile('log.txt', (outputText_2+"\n") );
 	}
 
 	var outputText_3 ="----END OF TWEETS---\n-----------------------";
 	console.log(outputText_3);
-	logText(outputText_3);
+	fs.appendFile('log.txt', (outputText_3+"\n") );
 }
 
 
@@ -157,12 +159,16 @@ function logMusic(trackItems, songName) {
 	;
 
 	console.log(outputText);
-	logText(outputText);
+	fs.appendFile('log.txt', (outputText+"\n") );
 }
 
 
 
 function logMovies(body) {
+
+	//HEY!!!!!!!!!!!!!!!
+	//YOU COULD ALSO USE JSON.parse(body).imdbRating;
+	// insteasd of the split grabs
 
 	// // * Title of the movie.
 	var mTitle = body.split("Title")[1].split("Year")[0];
@@ -229,17 +235,9 @@ function logMovies(body) {
 		+"-----------------------"
 	;
 	console.log(outputText);
-	logText(outputText);
+	fs.appendFile('log.txt', (outputText+"\n") );
 }
 
 
-// BONUS
-// APPEND TEXT TO A FILE
-function logText(txt) {
-	var fs = require('fs')
-	fs.appendFile('log.txt', (txt+"\n"), function (err) {
-		if (err) return console.log(err);
-		// console.log('Appended!');
-	});
-}
+
 
